@@ -1,0 +1,52 @@
+[
+    {
+        "name": "Sweeping",
+        "physicalTax": "Low",
+        "_id": 1
+    },
+    {
+        "name": "Dishes",
+        "physicalTax": "Low",
+        "_id": 2
+    },
+    {
+        "name": "Laundry",
+        "physicalTax": "Low",
+        "_id": 3
+    },
+    {
+        "name": "Folding",
+        "physicalTax": "Medium",
+        "_id": 4
+    },
+    {
+        "name": "Vacuum",
+        "physicalTax": "Low",
+        "_id": 5
+    },
+    {
+        "name": "Dusting",
+        "physicalTax": "Low",
+        "_id": 6
+    },
+    {
+        "name": "Window Cleaning",
+        "physicalTax": "High",
+        "_id": 7
+    },
+    {
+        "name": "Toilet Scrub",
+        "physicalTax": "High",
+        "_id": 8
+    },
+    {
+        "name": "Room Mess",
+        "physicalTax": "Medium",
+        "_id": 9
+    },
+    {
+        "name": "Refrigirator Deep clean",
+        "physicalTax": "High",
+        "_id": 10
+    }
+]
