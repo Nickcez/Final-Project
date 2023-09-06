@@ -6,10 +6,11 @@ const Navbar = () => {
     return (
     <Container>
         <DebutContainer>
-            <HomeLink to={"/"}>My App</HomeLink>
+            <HomeLink to={"/homepage"}>My App</HomeLink>
         </DebutContainer>
         <ListAndSearch />
         <CatBar>
+            Energy:
             <CatLink to={"/chores?physicalTax=Low"}>Low</CatLink>
             <CatLink to={"/chores?physicalTax=Medium"}>Medium</CatLink>
             <CatLink to={"/chores?physicalTax=High"}>High</CatLink>
@@ -57,6 +58,8 @@ const CatBar = styled.div`
     justify-content: space-between;
     align-items: center;
     overflow: scroll;
+    color: white;
+    font-size: 24px;
 `
 
 const CatLink = styled(Link)`

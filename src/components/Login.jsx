@@ -1,18 +1,30 @@
 import {styled} from "styled-components";
 import { useState } from "react";
-import LogForm from "./LogForm";
-import CreateForm from "./CreateForm";
+// import LogForm from "./LogForm";
+// import CreateForm from "./CreateForm";
+import { useAuth0 } from "@auth0/auth0-react";
+import { FiLogIn } from "react-icons/fi"
 
 const Login = () => {
-    const [status, setStatus] = useState("login")
-    return (
-    <Container>
-        <LogContainer>
-            {status === "login" ? (<LogForm setStatus={setStatus} />) : (<CreateForm setStatus={setStatus} />)}
-        </LogContainer>
-    </Container>
-    )
-}
+    const { loginWithRedirect } = useAuth0();
+    
+    return <button onClick={() => loginWithRedirect()}>Log In</button>;
+};
+    
+    // const [status, setStatus] = useState("login")
+    // return (
+    // <Container>
+    //     <LogContainer>
+    //         {status === "login" ? (<LogForm setStatus={setStatus} />) : (<CreateForm setStatus={setStatus} />)}
+    //     </LogContainer>
+    // </Container>
+    // )
+//}
+
+const Log = styled(FiLogIn)`
+    color: white;
+    font-size: 20px;
+`
 
 const Container = styled.div`
     margin-top: 5vh;

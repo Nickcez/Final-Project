@@ -55,11 +55,10 @@ const ChoresPage = () => {
     ) : ( 
         <>
             <H1>{currentphysicalTax}</H1>
-            <choreGrid>
+            <ChoreGrid>
                 {chores.map(chore => (
                     <StyledLink to={`/chores/${chore._id}`} key={chore._id}>
                         <ChoreItem key={chore._id}>
-                            {/* <Img src={chore.imageSrc} alt={chore.name} /> */}
                             <ChoreDetails>
                                 <Name>{chore.name}</Name>
                                 <Level>{chore.physicalTax}</Level>
@@ -67,7 +66,7 @@ const ChoresPage = () => {
                         </ChoreItem>
                     </StyledLink>
                 ))}
-            </choreGrid>
+            </ChoreGrid>
         </>
     )}
     </>
@@ -123,28 +122,15 @@ const NoResultsMessage = styled.div`
     padding: 10vw;
 `;
 
-export const Img = styled.img`
-    width: 100%;
-    aspect-ratio: 1;
-    margin-left: auto;
-    margin-right: auto;
-
-    overflow: hidden;
-    object-fit: cover;
-    
-    border-radius: 5px 5px 0 0;
-`;
-
 export const ChoreDetails = styled.div`
-    background-color: #0F4AA3;
+    background-color: black;
     width: 100%;
     height: 6vw;
     border-radius: 5px;
     color: white;
+    text-align: center;
     padding: 1vw;
     font-size: 0.9rem;
-    box-shadow: rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px, rgba(240, 46, 170, 0.2) 15px 15px, rgba(240, 46, 170, 0.1) 20px 20px, rgba(240, 46, 170, 0.05) 25px 25px;
-
     @media (max-width: 768px) {
             height: 10vw;
     }

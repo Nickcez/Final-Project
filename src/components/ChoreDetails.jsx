@@ -3,25 +3,29 @@ import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { ListContext } from "./ListContext";
 import Loading from "./Loading";
+import { useAuth0 } from "@auth0/auth0-react";
 
-const ChoreDetails = () =>
-{
+const ChoreDetails = () => {
     const [chore, setChore] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [isAdded, setIsAdded] = useState(false)
-    const {choreId} = useParams();
+    const { choreId } = useParams();
     const navigate = useNavigate();
-    const {current, triggerModification, setTriggerModification, state, setState} = useContext(ListContext)
+    const { user} = useAuth0();
+    const {currentList, triggerModification, setTriggerModification, state, setState} = useContext(ListContext)
 
     //this fetch is getting the specific item with its id which is taken from the params
     useEffect(() => {
         fetch(`/api/chores/${choreId}`)
             .then(response => {
+                console.log(choreId);
                 return response.json();
             })
             .then(data => {
+                console.log(data, ("fetchlog"));
                 if (data.status === 200){
                     setChore(data.data);
+                    setIsLoading(false);
                 } else {
                     navigate("/error");
                 }
@@ -32,70 +36,51 @@ const ChoreDetails = () =>
             // eslint-disable-next-line
     }, []);
 
-    // This fetch verifies if we have fetched the chore yet and will get the company with its id
-    // useEffect(() => {
-    //     if (chore)
-    //     {
-    //         fetch(`/api/companies/${chore.companyId}`)
-    //         .then(response => {
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             if (data.status === 200){
-    //                 setCompany(data.data);
-    //                 setIsLoading(false);
-    //             } else {
-    //                 navigate("/error");
-    //             }
-    //         })
-    //     }
-        // eslint-disable-next-line
-    // }, [chore]);
-
-    //This will make a small pop up to let the user know the item was added to cart and disaeappear after 2 seconds
-    const addedNotif = () =>
-    {
+    //This will make a small pop up to let the user know the chore was added to cart and disaeappear after 2 seconds
+    const addedNotif = () => {
         setIsAdded(true)
 
         setTimeout(() => setIsAdded(false), 2000)
     }
 
-    //This fetch here will add the item to the cart if its not there already
+    //This fetch here will add the item to the list if its not there already
     //If it is there already it will do a patch to change the quantity and add 1
-    const addToList = () =>
-    {
-        //checking if we already are doing a fetch, we want to wait for the cart to update since we are checking at wether the item is already in the cart or not
+    const addToList = () => {
+        //checking if we already are doing a fetch, we want to wait for the list to update since we are checking at wether the item is already in the cart or not
         if (state !== "clear") {return}
         setState("fetching")
-        if (currentList !== "empty" && currentList.some((item) => item.chore._id === chore._id))
-            {
-            const choreInList = currentList.filter((item) => item.chore._id === chore._id)
-            const newQty = (Number(choreInList[0].quantity) + 1)
-            fetch("/api/list", {
-                method: "PATCH",
-                body: JSON.stringify({"chore" : chore,
-                                    "quantity": newQty}),
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                })
-                .then((res) => res.json())
-                .then((json) => {
-                    //Adding the notif and triggering a new GET on the cart context
-                    addedNotif();
-                    setTriggerModification(triggerModification + 1)
-                    const { status } = json;
-                    if (status === 201) {
-                    return;
-                    } else {
-                    navigate("/error")
-                    }
-                });
+        // if (currentList !== "empty" && currentList.some((item) => item.chore._id === chore._id))
+        //     {
+            // const choreInList = currentList.filter((item) => item.chore._id === chore._id)
+            // const newQty = (Number(choreInList[0].quantity) + 1)
+            // fetch("/api/list", {
+            //     method: "PATCH",
+            //     body: JSON.stringify({
+            //         "chore" : chore,
+            //         "quantity": newQty
+            //     }),
+            //     headers: {
+            //         Accept: "application/json",
+            //         "Content-Type": "application/json",
+            //     },
+            //     })
+            //     .then((res) => res.json())
+            //     .then((json) => {
+            //         //Adding the notif and triggering a new GET on the List context
+            //         addedNotif();
+            //         setTriggerModification(triggerModification + 1)
+            //         const { status } = json;
+            //         if (status === 201) {
+            //         return;
+            //         } else {
+            //         navigate("/error")
+            //         }
+            //     });
+                
         
-        }
-        else {
-            fetch("/api/list", {
+        // }
+        // else {
+            fetch(`/api/list/${user?.nickname}`, {
             method: "POST",
             body: JSON.stringify({"chore" : chore,
                                 "quantity": 1}),
@@ -114,7 +99,23 @@ const ChoreDetails = () =>
                 } else {
                 navigate("/error")
                 }
-            });}
+            });
+
+            fetch(`https://pixe.la/v1/users/${user.nickname}/graphs/hello12/add`, {
+                method: 'PUT',
+                headers: {
+                    "X-USER-TOKEN": "-Hello8990" ,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ 
+                    quantity : "1" 
+                })
+        })
+        .then((res) => res.json())
+        .then((json) => {
+                console.log(json);
+            })
+        // }
 
     }
 
@@ -123,16 +124,16 @@ const ChoreDetails = () =>
         {isLoading ? (<Loading />) : (
                 <Container>
                 <ProductContainer>
-                    <ImageContainer>
-                        {/* <Image src={chore.imageSrc} /> */}
-                    </ImageContainer>
+                    {/* <ImageContainer>
+                        <Image src={chore.imageSrc} />
+                    </ImageContainer> */}
                     <DescContainer>
                         <h1>{chore.name}</h1>
-                        <p>Category: {chore.physicalTax}</p>
-                        <AddButton onClick={addToList}>Add to list</AddButton>
+                        <p>Fatigue level: {chore.physicalTax}</p>
+                        <AddButton onClick={addToList}>Confirm</AddButton>
                     </DescContainer>
                 </ProductContainer>
-                {isAdded ? (<Notif>Item Added to Cart!</Notif>): (<></>)}
+                {isAdded ? (<Notif>Chore was completed!</Notif>): (<></>)}
             </Container>
         )}
         </>

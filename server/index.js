@@ -9,7 +9,13 @@ const {
     getList,
     addToList,
     addLogIn,
-    createLogIn
+    createLogIn,
+    updateList,
+    addOrder,
+    deleteList,
+    getOrder,
+    getUser,
+    addUser
 } = require("./handlers");
 
 const PORT = 4000;
@@ -20,11 +26,17 @@ express()
 
   .get("/api/chores", getChores)
   .get("/api/chores/:chore", getChore)
-  .get("/api/list", getList)
+  .get("/api/login/:userId", getUser)
+  .get("/api/list/:userId", getList)
+  .get("/api/order/:missionId", getOrder)
 
-  .post("/api/list", addToList)
-  .post("/api/login", addLogIn)
-  .post("/api/createlogin", createLogIn)
+  .post("/api/list/:userId", addToList)
+  .post("/api/checkout", addOrder)
+  .post("/api/login", addUser)
+  
+  .patch("/api/list/:userId", updateList)
+
+  .delete("/api/list/:id", deleteList)
 
   .get("*", (req, res) => {
     res.status(404).json({

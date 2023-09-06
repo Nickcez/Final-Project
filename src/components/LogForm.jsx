@@ -4,17 +4,26 @@ import {FiEye, FiEyeOff} from "react-icons/fi"
 
 const initialState = {username: null, password: null}
 
-const LogForm = ({setStatus}) =>
-{
+const LogForm = ({setStatus}) => {
+
+    const [usermame, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [user, setUser] = useState();
+
     // So we have three states, on for the formdata, one to see the password
-    const [formData, setFormData] = useState(initialState)
-    const [seePw, setSeePw] = useState(false)
+    const [formData, setFormData] = useState(initialState);
+    const [seePw, setSeePw] = useState(false);
 
     //We set the formdata on changes in the form
-    const handleChange = (ev) => 
-    {
+    const handleChange = (ev) => {
         setFormData({ ...formData, [ev.target.id]: ev.target.value });
-    }
+    };
+
+    const handleSubmit = (ev) => {
+        ev.preventDefault();
+        const user = { username, password}
+
+    };
 
     return (
     <Container>
@@ -31,7 +40,7 @@ const LogForm = ({setStatus}) =>
             </NameDiv>
         </FormContainer>
         <ButtonContainer>
-            <Formbutton onClick={handleChange}>Confirm</Formbutton>
+            <Formbutton onClick={handleSubmit}>Log In</Formbutton>
             <p>Don't have an account? <CreateButton onClick={() => {setStatus("create")}}>Create an account</CreateButton></p>
         </ButtonContainer>
     </Container>

@@ -1,7 +1,6 @@
 import { useState } from "react";
+import { Container, FormContainer, StyledInput, FormLabel, Formbutton, NameDiv, ButtonContainer, CreateButton, EyeButton, EyeClosedIcon, EyeIcon } from "./LogForm"
 
-
-// const { Container, FormContainer, StyledInput, FormLabel, Formbutton, NameDiv, ButtonContainer, CreateButton, EyeButton, EyeClosedIcon, EyeIcon } = require("./LogForm")
 
 const initialState = {username: null, password: null, confirmPassword: null, email: null}
 
@@ -11,17 +10,16 @@ const CreateForm = ({ setStatus }) =>
     const [formData, setFormData] = useState(initialState)
     const [seePw, setSeePw] = useState(false)
     const [seeCPw, setSeeCPw] = useState(false)
-    const [seeNotification, setSeeNotification] = useState(false)
 
-    const handleChange = (ev) => 
-    {
+    const handleChange = (ev) => {
         setFormData({ ...formData, [ev.target.id]: ev.target.value });
     }
 
-    const notification = () =>
-    {
-        setSeeNotification(!seeNotification)
-    }
+    const handleSubmit = (ev) => {
+        ev.preventDefault();
+        setFormData({...formData})
+    };
+
 
     return(
         <Container>
@@ -43,11 +41,11 @@ const CreateForm = ({ setStatus }) =>
             </NameDiv>
             <NameDiv>
                 <FormLabel htmlFor="email">Email</FormLabel>
-                <StyledInput onChange={handleChange} type='password' id="email" required/>
+                <StyledInput onChange={handleChange} type='email' id="email" required/>
             </NameDiv>
         </FormContainer>
         <ButtonContainer>
-            <Formbutton onClick={notification}>Confirm</Formbutton>
+            <Formbutton onClick={handleChange}>Confirm</Formbutton>
             <p>Already have an account? <CreateButton onClick={() => {setStatus("login")}}>Log in</CreateButton></p>
         </ButtonContainer>
         

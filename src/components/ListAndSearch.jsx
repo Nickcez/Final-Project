@@ -1,8 +1,10 @@
 import {styled} from "styled-components"
-import {FiShoppingCart, FiSearch} from "react-icons/fi"
+import {FiList, FiSearch, FiLogOut, FiUser } from "react-icons/fi"
 import { Link, useNavigate } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
 import { ListContext } from "./ListContext"
+import Login from "./Login"
+import LogoutButton from "./LogoutButton"
 
 const ListAndSearch = () =>
 {
@@ -49,8 +51,9 @@ const ListAndSearch = () =>
             <SearchInput value={searchTerms} onKeyDown={enterListener} onChange={setSearch}></SearchInput>
             <SearchButton onClick={navSearch} disabled={searchTerms ? false : true}><SearchIcon></SearchIcon></SearchButton>
         </Search>
+        <LogDiv to={"/profile"}><User></User></LogDiv>
         <LogDiv to={"/list"}><Cart></Cart>{ListNumber ? (<NumberCircle><Number>{ListNumber}</Number></NumberCircle>) : (<></>)}</LogDiv>
-        <LogDiv to={"/login"}><Log>Log In</Log></LogDiv>
+        <LogoutButton></LogoutButton>
     </Container>)
 }
 
@@ -131,13 +134,20 @@ const SearchIcon = styled(FiSearch)`
     }
 `
 
-const Cart = styled(FiShoppingCart)`
+const Cart = styled(FiList)`
     color: white;
-    fill: white;
     height: 20px;
     width: auto;
     position: relative;
 `
+
+const User = styled(FiUser)`
+    color: white;
+    height: 20px;
+    width: auto;
+    position: relative;
+`
+
 
 const NumberCircle = styled.div`
     aspect-ratio: 1 !important;
@@ -160,10 +170,10 @@ const Number = styled.p`
     color: white;
 `
 
-const Log = styled.div`
-    color: white;
-    font-size: 20px;
-`
+// const Log = styled(FiLogIn)`
+//     color: white;
+//     font-size: 20px;
+// `
 
 const LogDiv = styled(Link)`
     background-color: transparent;

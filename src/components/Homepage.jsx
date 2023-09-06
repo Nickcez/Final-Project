@@ -22,11 +22,10 @@ const Homepage = () => {
     //API fetching logic for chores being displayed
     
     useEffect(() => {
-        console.log("test test");
         fetch("/api/chores")
             .then((response) => {
-                console.log(typeof response);
-                response.json()})
+                return response.json()
+            })
             .then((data) => {
                 console.log(data);
                 setAllChores(data.data);
@@ -72,18 +71,15 @@ const Homepage = () => {
                             {chores.map(chore => (
                                 <StyledLink to={`/chores/${chore._id}`} key={chore._id}>
                                     <ChoreItem key={chore._id}>
-                                        {/* <ImgDiv>
-                                            <Img src={chore.imageSrc} alt={chore.name} />
-                                        </ImgDiv> */}
                                         <ChoreDetails>
                                             <Name>{chore.name}</Name>
-                                            <Price>{chore.physicalTax}</Price>
+                                            <Level>{chore.physicalTax}</Level>
                                         </ChoreDetails>
                                     </ChoreItem>
                                 </StyledLink>
                             ))}
                         </ModifiedChoreGrid>
-                        <Button onClick={() =>handleViewMore(physicalTax)}>View more</Button>
+                        <Button onClick={() =>handleViewMore(topChoresByphysicalTax)}>View more</Button>
                     </div>
                 ))}
     </>)

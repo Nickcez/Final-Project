@@ -1,21 +1,46 @@
 import { styled } from "styled-components";
 import ListContainer from "./ListContainer";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ListContext } from "./ListContext";
 import { useNavigate } from "react-router-dom";
+import Profile from "./Profile";
+import { useAuth0 } from "@auth0/auth0-react";
 
-const List = () =>
-{
+const List = () => {
     //Always using the cartcontext to get the current cart
     const {currentList} = useContext(ListContext);
+    const [ graph, setGraph ] = useState();
+    const { user } = useAuth0();
     const navigate = useNavigate();
 
-    return(
+    useEffect(() => {
+        fetch(`https://pixe.la/v1/users/${user.nickname}/graphs/hello12`, {
+                method: 'GET',
+                headers: {
+                  "Content-Type": "application/json",
+                },
+        })
+        // .then((res) => {
+        //     console.log(res);
+        //     return (
+        //         res.json()
+        //     )
+        // })
+        .then((svg) => {
+            setGraph(svg);
+            console.log(svg);
+        })
+        }, [])
+
+
+    return (
     <Container>
-        <h1>Your List:</h1>
+        <Profile />
+        <h1>Your completed chores: </h1>
         <ListContainer currentList={currentList}/>
-        {/*Displaying the checkoutbtn only if items are in the cart*/}
-        {currentList === "empty" ? (<></>) : (<CheckoutBtn onClick={() => navigate("/checkout")}>Checkout</CheckoutBtn>)}
+        {/*Displaying the checkoutbtn only if chores are in the cart*/}
+        {/* {currentList === "empty" ? (<></>) : (<CheckoutBtn onClick={() => navigate("/checkout")}>Completely Done ??</CheckoutBtn>)} */}
+        <img src={`https://pixe.la/v1/users/${user.nickname}/graphs/hello12`} alt="Pixela Graph"></img>
     </Container>
     )
 }

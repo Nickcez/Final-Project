@@ -6,9 +6,10 @@ const Footer = () =>
     return (
     <Container>
         <DebutContainer>
-            <HomeLink to={"/"}>My App</HomeLink>
+            <HomeLink to={"/homepage"}>My App</HomeLink>
         </DebutContainer>    
         <CatBar>
+            <InfoLink to={"/about"}>Why use this app ??</InfoLink>
             {/* <CatLink to={"/products?category=Fitness"}>Fitness</CatLink>
             <CatLink to={"/products?category=Entertainment"}>Entertainement</CatLink>
             <CatLink to={"/products?category=Lifestyle"}>Lifestyle</CatLink>
@@ -75,6 +76,23 @@ const CatLink = styled(Link)`
         padding: 2px 10px;
         height: fit-content;
     }
+`
+
+const InfoLink = styled(Link)`
+background-color: transparent;
+font-size: 18px;
+color: white;
+text-decoration: none;
+display: flex;
+align-items: center;
+padding: 5px 20px;
+justify-content: center;
+
+@media only screen and (max-width: 600px) {
+    font-size: 10px;
+    padding: 2px 10px;
+    height: fit-content;
+}
 `
 
 const DebutContainer = styled.div`

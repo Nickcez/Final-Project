@@ -4,82 +4,24 @@ import { styled } from "styled-components";
 import { ListContext } from "./ListContext";
 import {FiTrash2} from "react-icons/fi"
 
-let deletetime;
 
-const CartItem = ({item, quantity}) =>
-{
-    //Those states are used to keep track of the qty in cart, total price and quantity left if user adds more than possible
+
+const ListItem = ({item, quantity, choreId}) => {
+    //Those states are used to keep track of the qty in list and quantity left if user adds more
     const [qty, setQty] = useState(quantity);
-    const [qtyLeft, setQtyLeft] = useState(null);
 
-    const {setTriggerModification, triggerModification} = useContext(CartContext)
+    const {setTriggerModification, triggerModification} = useContext(ListContext)
 
     const navigate = useNavigate()
-
-    //This is the + button, the timeout thing will be explained in the next button
-    //We set a max quantity of 10, why? we dont want user to buy more than 10 per items. why? i dont know it was my personal decision
-    //so then we set the new qty and send a update fetch to update the quantity in the backend
-    //Note:  we set the quantity here and take care in the fetch of changing it back if there's not enough in stock because it makes the experience more responsive
-    const updateQtyAdd = () =>
-    {
-        clearTimeout(deletetime)
-        if ((qty + 1) > 10) {return}
-        setQty(Number(qty) + 1)
-        updateFetch(Number(qty) + 1)
-    }
-
-
-    //Exact same thing as the + button but we also have the setTimeout here
-    //The set timeout will be used to delete an item from the cart if the quantity is put to 0
-    //We use a set timeout because maybe the user erased the quantity to change it or put it to 0 by accident
-    //So they have 5 seconds to change it back to more than 0, if they dont we assume they want to delete the item
-    //If they do change it back the timeout is cleared
-    const updateQtyLess = () =>
-    {
-        if ((qty - 1) < 0) {return}
-        clearTimeout(deletetime)
-        setQty(Number(qty) - 1)
-        if (Number(qty - 1) > 0) {updateFetch(Number(qty) - 1)}
-        else {
-            deletetime = setTimeout(() =>
-            {
-                deleteFetch()
-            }, 4000)
-        }
-    }
-
-    //This is the same as the two last functions but combined if the user enters the input by himself instead of using the buttons
-    const updateQtyInpt = (ev) =>
-    {
-        clearTimeout(deletetime)
-
-        if (!Number.isInteger(Number(ev.target.value)) || Number(ev.target.value) > 10) {return}
-
-        setQty(Number(ev.target.value))
-
-        if (Number(ev.target.value) > 0) {updateFetch(Number(ev.target.value))}
-        else {
-            deletetime = setTimeout(() =>
-            {
-                deleteFetch()
-            }, 4000)
-        }
-    }
-
-    //This useEffect is used to change the price each time the quanity changes (total price for specific item)
-    // useEffect(() =>
-    // {
-    //     setPrice((parseFloat(item.price.slice(1)) * qty).toFixed(2))
-    //     // eslint-disable-next-line
-    // }, [qty])
-
+    
     //This is the fetch to update quantity
-    const updateFetch = (newQty) =>
-    {
+    const updateFetch = (newQty) => {
         fetch("/api/list", {
             method: "PATCH",
-            body: JSON.stringify({"chore" : item,
-                                "quantity": newQty}),
+            body: JSON.stringify({
+                "chore" : item,
+                "quantity": newQty
+            }),
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
@@ -95,7 +37,6 @@ const CartItem = ({item, quantity}) =>
                 } else if (status === 400) {
                     // If we have this status here that means there's not enough in stock so we setQtyLeft to display a message and set the QTY to the quantity in the cart context
                     setQty(quantity)
-                    setQtyLeft(leftQuantity)
                 } else {
                 navigate("/error")
                 }
@@ -103,9 +44,8 @@ const CartItem = ({item, quantity}) =>
     }
 
     //same concept as the update fetch but to delete a product
-    const deleteFetch = () =>
-    {
-        fetch(`/api/list/${chore._id}`, {
+    const deleteFetch = () => {
+        fetch(`/api/list/${choreId}`, {
             method: "DELETE"
             })
             .then((res) => res.json())
@@ -128,14 +68,14 @@ const CartItem = ({item, quantity}) =>
         <DescContainer>
             <ItemDesc>
                 <h2>{item.name}</h2>
-                <QtyTotalDiv>
+                {/* <QtyTotalDiv>
                     <p>Quantity: </p>
                     <QtyDiv>
                         <QtyBtn onClick={updateQtyLess}>-</QtyBtn>
                         <QtyInput onChange={updateQtyInpt} value={qty} />
                         <QtyBtn onClick={updateQtyAdd}>+</QtyBtn>
                     </QtyDiv>
-                </QtyTotalDiv>
+                </QtyTotalDiv> */}
                 
             </ItemDesc>
             <PriceDiv>
@@ -307,4 +247,4 @@ const LeftMsg = styled.p`
     font-weight: bold;
 `
 
-export default CartItem;
+export default ListItem;
